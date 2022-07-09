@@ -1,0 +1,19 @@
+version: "3.3"
+
+services:
+  app:
+    build: ./
+    command: ./wait_for_postgres.sh postgres ${PG_PASSWORD} ./nba_api
+    ports:
+      - ${APP_PORT}:8000
+    depends_on:
+      - postgres
+  postgres:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    ports:
+      - ${PG_PORT}:5432

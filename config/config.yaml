@@ -1,0 +1,11 @@
+server:
+  Port: 8000
+  ReadTimeout: 10
+  WriteTimeout: 10
+
+postgres:
+  PgHost: postgres
+  PgPort: 5432
+  PgUsername: postgres
+  PgDBName: postgres
+  PgSSLMode: disable
