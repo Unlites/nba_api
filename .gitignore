@@ -1,3 +1,4 @@
 .env
 /nba_api
 .database
+.gitignore
