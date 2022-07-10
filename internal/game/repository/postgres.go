@@ -1,10 +1,14 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/Unlites/nba_api/internal/game"
 	"github.com/Unlites/nba_api/internal/models"
 	"github.com/jmoiron/sqlx"
 )
+
+const gamesTable = "games"
 
 type gameRepo struct {
 	db *sqlx.DB
@@ -18,6 +22,14 @@ func (r *gameRepo) GetById(id int64) (*models.Game, error) {
 	return nil, nil
 }
 
-func (r *gameRepo) Create(game *models.Game) error {
-	return nil
+func (r *gameRepo) Create(game *models.Game) (int64, error) {
+	query := fmt.Sprintf(insertGameQuery, gamesTable)
+	row := r.db.QueryRow(query, game.HomeTeamId, game.VisitorTeamId, game.Score, game.WonTeamId)
+
+	var id int64
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

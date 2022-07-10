@@ -5,6 +5,6 @@ type Game struct {
 	HomeTeamId    int64   `json:"home_team_id" binding:"required" db:"home_team_id"`
 	VisitorTeamId int64   `json:"visitor_team_id" binding:"required" db:"visitor_team_id"`
 	Score         string  `json:"score" binding:"required" db:"score"`
-	WonTeamId     int64   `json:"won_team_id" binding:"required" db:"won_team"`
+	WonTeamId     int64   `json:"won_team_id" binding:"required" db:"won_team_id"`
 	Stats         []*Stat `json:"stats" binding:"required"`
 }

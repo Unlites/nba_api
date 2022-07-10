@@ -3,10 +3,12 @@ package usecase
 import (
 	"github.com/Unlites/nba_api/internal/game"
 	"github.com/Unlites/nba_api/internal/models"
+	"github.com/Unlites/nba_api/internal/stat"
 )
 
 type gameUC struct {
 	gameRepo game.Repository
+	statRepo stat.Repository
 }
 
 func NewGameUseCase(gameRepo game.Repository) game.UseCase {
@@ -14,9 +16,35 @@ func NewGameUseCase(gameRepo game.Repository) game.UseCase {
 }
 
 func (uc gameUC) GetById(id int64) (*models.Game, error) {
-	return uc.gameRepo.GetById(id)
+
+	game, err := uc.gameRepo.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	stats, err := uc.statRepo.GetByGameId(game.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	game.Stats = stats
+
+	return game, nil
 }
 
 func (uc gameUC) Create(game *models.Game) error {
-	return uc.gameRepo.Create(game)
+	gameId, err := uc.gameRepo.Create(game)
+	if err != nil {
+		return err
+	}
+
+	for _, stat := range game.Stats {
+		stat.GameId = gameId
+		err = uc.statRepo.Create(stat)
+		if err != nil {
+			return err
+		}
+	}
+
+	return err
 }
