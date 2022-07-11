@@ -19,7 +19,11 @@ func NewGameRepo(db *sqlx.DB) game.Repository {
 }
 
 func (r *gameRepo) GetById(id int64) (*models.Game, error) {
-	return nil, nil
+	var game *models.Game
+	query := fmt.Sprintf(selectGameByIdQuery, gamesTable)
+	err := r.db.Get(&game, query, id)
+
+	return game, err
 }
 
 func (r *gameRepo) Create(game *models.Game) (int64, error) {

@@ -19,11 +19,19 @@ func NewStatRepo(db *sqlx.DB) stat.Repository {
 }
 
 func (r *statRepo) GetById(id int64) (*models.Stat, error) {
-	return nil, nil
+	var stat *models.Stat
+	query := fmt.Sprintf(selectStatByIdQuery, statsTable)
+	err := r.db.Get(&stat, query, id)
+
+	return stat, err
 }
 
-func (r *statRepo) GetByGameId(gameId int64) ([]*models.Stat, error) {
-	return nil, nil
+func (r *statRepo) GetAllByGameId(gameId int64) ([]*models.Stat, error) {
+	var stats []*models.Stat
+	query := fmt.Sprintf(selectStatByGameIdQuery, statsTable)
+	err := r.db.Select(&stats, query, gameId)
+
+	return stats, err
 }
 
 func (r *statRepo) Create(stat *models.Stat) error {

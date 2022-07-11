@@ -22,7 +22,7 @@ func (uc gameUC) GetById(id int64) (*models.Game, error) {
 		return nil, err
 	}
 
-	stats, err := uc.statRepo.GetByGameId(game.Id)
+	stats, err := uc.statRepo.GetAllByGameId(game.Id)
 	if err != nil {
 		return nil, err
 	}
