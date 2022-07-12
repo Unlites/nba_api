@@ -8,8 +8,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-const statsTable = "stats"
-
 type statRepo struct {
 	db *sqlx.DB
 }
