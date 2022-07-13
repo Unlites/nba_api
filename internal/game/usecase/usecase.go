@@ -11,12 +11,11 @@ type gameUC struct {
 	statRepo stat.Repository
 }
 
-func NewGameUseCase(gameRepo game.Repository) game.UseCase {
-	return &gameUC{gameRepo: gameRepo}
+func NewGameUseCase(gameRepo game.Repository, statRepo stat.Repository) game.UseCase {
+	return &gameUC{gameRepo: gameRepo, statRepo: statRepo}
 }
 
 func (uc gameUC) GetById(id int64) (*models.Game, error) {
-
 	game, err := uc.gameRepo.GetById(id)
 	if err != nil {
 		return nil, err

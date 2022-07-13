@@ -17,7 +17,7 @@ func NewStatRepo(db *sqlx.DB) stat.Repository {
 }
 
 func (r *statRepo) GetById(id int64) (*models.Stat, error) {
-	var stat *models.Stat
+	stat := &models.Stat{}
 	query := fmt.Sprintf(selectStatByIdQuery, statsTable)
 	err := r.db.Get(&stat, query, id)
 
@@ -25,8 +25,8 @@ func (r *statRepo) GetById(id int64) (*models.Stat, error) {
 }
 
 func (r *statRepo) GetAllByGameId(gameId int64) ([]*models.Stat, error) {
-	var stats []*models.Stat
-	query := fmt.Sprintf(selectStatByGameIdQuery, statsTable)
+	stats := make([]*models.Stat, 0)
+	query := fmt.Sprintf(selectStatsByGameIdQuery, statsTable)
 	err := r.db.Select(&stats, query, gameId)
 
 	return stats, err

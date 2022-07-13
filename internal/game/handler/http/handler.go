@@ -19,9 +19,18 @@ func NewGameHandler(gameUC game.UseCase) game.Handler {
 
 func (h *gameHandler) Create(c *gin.Context) {
 	game := &models.Game{}
+	if err := c.BindJSON(game); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
 	if err := h.gameUC.Create(game); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
 	}
 
 	c.Status(http.StatusOK)
@@ -30,13 +39,17 @@ func (h *gameHandler) Create(c *gin.Context) {
 func (h *gameHandler) GetById(c *gin.Context) {
 	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	game, err := h.gameUC.GetById(idInput)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 

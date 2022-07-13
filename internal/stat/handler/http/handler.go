@@ -22,6 +22,7 @@ func (h *statHandler) Create(c *gin.Context) {
 
 	if err := h.statUC.Create(stat); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.Status(http.StatusOK)

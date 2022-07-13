@@ -8,6 +8,8 @@ services:
       - ${APP_PORT}:8000
     depends_on:
       - postgres
+    volumes:
+      - .:/go
   postgres:
     restart: always
     image: postgres:latest
