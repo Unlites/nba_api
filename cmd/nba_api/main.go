@@ -39,7 +39,7 @@ func main() {
 	statRepo := statRepository.NewStatRepo(db)
 
 	gameUC := gameUseCase.NewGameUseCase(gameRepo, statRepo)
-	teamUC := teamUseCase.NewTeamUseCase(teamRepo)
+	teamUC := teamUseCase.NewTeamUseCase(teamRepo, playerRepo)
 	playerUC := playerUseCase.NewPlayerUseCase(playerRepo)
 	statUC := statUseCase.NewStatUseCase(statRepo)
 

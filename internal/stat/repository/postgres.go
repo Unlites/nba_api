@@ -19,7 +19,7 @@ func NewStatRepo(db *sqlx.DB) stat.Repository {
 func (r *statRepo) GetById(id int64) (*models.Stat, error) {
 	stat := &models.Stat{}
 	query := fmt.Sprintf(selectStatByIdQuery, statsTable)
-	err := r.db.Get(&stat, query, id)
+	err := r.db.Get(stat, query, id)
 
 	return stat, err
 }

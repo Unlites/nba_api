@@ -24,3 +24,11 @@ func (uc playerUC) GetAllByTeamId(teamId int64) ([]*models.Player, error) {
 func (uc playerUC) Create(player *models.Player) error {
 	return uc.playerRepo.Create(player)
 }
+
+func (uc playerUC) Update(player *models.Player) error {
+	return uc.playerRepo.Update(player)
+}
+
+func (uc playerUC) Delete(id int64) error {
+	return uc.playerRepo.Delete(id)
+}
