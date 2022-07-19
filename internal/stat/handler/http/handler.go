@@ -43,3 +43,52 @@ func (h *statHandler) GetById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, stat)
 }
+
+func (h *statHandler) Update(c *gin.Context) {
+	stat := &models.Stat{}
+
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	stat.Id = idInput
+
+	if err := c.BindJSON(stat); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := h.statUC.Update(stat); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (h *statHandler) Delete(c *gin.Context) {
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := h.statUC.Delete(idInput); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}

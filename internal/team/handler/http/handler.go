@@ -60,6 +60,16 @@ func (h *teamHandler) GetById(c *gin.Context) {
 func (h *teamHandler) Update(c *gin.Context) {
 	team := &models.Team{}
 
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	team.Id = idInput
+
 	if err := c.BindJSON(team); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

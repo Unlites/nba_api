@@ -35,3 +35,17 @@ func (r *gameRepo) Create(game *models.Game) (int64, error) {
 
 	return id, nil
 }
+
+func (r *gameRepo) Update(game *models.Game) error {
+	query := fmt.Sprintf(updateGameQuery, gamesTable)
+	_, err := r.db.Exec(query, game.Id, game.HomeTeamId, game.VisitorTeamId, game.Score, game.WonTeamId)
+
+	return err
+}
+
+func (r *gameRepo) Delete(id int64) error {
+	query := fmt.Sprintf(deleteGameQuery, gamesTable)
+	_, err := r.db.Exec(query, id)
+
+	return err
+}

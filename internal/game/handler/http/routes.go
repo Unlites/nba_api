@@ -8,4 +8,6 @@ import (
 func RegisterRoutes(gameGroup *gin.RouterGroup, h game.Handler) {
 	gameGroup.POST("/", h.Create)
 	gameGroup.GET("/:id", h.GetById)
+	gameGroup.PUT("/:id", h.Update)
+	gameGroup.DELETE("/:id", h.Delete)
 }

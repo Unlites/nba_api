@@ -38,3 +38,17 @@ func (r *statRepo) Create(stat *models.Stat) error {
 
 	return err
 }
+
+func (r *statRepo) Update(stat *models.Stat) error {
+	query := fmt.Sprintf(updateStatQuery, statsTable)
+	_, err := r.db.Exec(query, stat.Id, stat.GameId, stat.PlayerId, stat.Points, stat.Rebounds, stat.Assists)
+
+	return err
+}
+
+func (r *statRepo) Delete(id int64) error {
+	query := fmt.Sprintf(deleteStatQuery, statsTable)
+	_, err := r.db.Exec(query, id)
+
+	return err
+}

@@ -47,3 +47,11 @@ func (uc gameUC) Create(game *models.Game) error {
 
 	return err
 }
+
+func (uc gameUC) Update(game *models.Game) error {
+	return uc.gameRepo.Update(game)
+}
+
+func (uc gameUC) Delete(id int64) error {
+	return uc.gameRepo.Delete(id)
+}

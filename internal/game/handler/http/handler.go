@@ -55,3 +55,52 @@ func (h *gameHandler) GetById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, game)
 }
+
+func (h *gameHandler) Update(c *gin.Context) {
+	game := &models.Game{}
+
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	game.Id = idInput
+
+	if err := c.BindJSON(game); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := h.gameUC.Update(game); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (h *gameHandler) Delete(c *gin.Context) {
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := h.gameUC.Delete(idInput); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}

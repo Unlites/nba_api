@@ -60,6 +60,16 @@ func (h *playerHandler) GetById(c *gin.Context) {
 func (h *playerHandler) Update(c *gin.Context) {
 	player := &models.Player{}
 
+	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	player.Id = idInput
+
 	if err := c.BindJSON(player); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -94,5 +104,4 @@ func (h *playerHandler) Delete(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
-
 }

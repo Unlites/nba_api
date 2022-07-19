@@ -20,3 +20,11 @@ func (uc statUC) GetById(id int64) (*models.Stat, error) {
 func (uc statUC) Create(stat *models.Stat) error {
 	return uc.statRepo.Create(stat)
 }
+
+func (uc statUC) Update(stat *models.Stat) error {
+	return uc.statRepo.Update(stat)
+}
+
+func (uc statUC) Delete(id int64) error {
+	return uc.statRepo.Delete(id)
+}
