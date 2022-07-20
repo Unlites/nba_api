@@ -49,9 +49,19 @@ func (uc gameUC) Create(game *models.Game) error {
 }
 
 func (uc gameUC) Update(game *models.Game) error {
+	_, err := uc.gameRepo.GetById(game.Id)
+	if err != nil {
+		return err
+	}
+
 	return uc.gameRepo.Update(game)
 }
 
 func (uc gameUC) Delete(id int64) error {
+	_, err := uc.gameRepo.GetById(id)
+	if err != nil {
+		return err
+	}
+
 	return uc.gameRepo.Delete(id)
 }

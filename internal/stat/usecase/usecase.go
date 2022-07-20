@@ -22,9 +22,19 @@ func (uc statUC) Create(stat *models.Stat) error {
 }
 
 func (uc statUC) Update(stat *models.Stat) error {
+	_, err := uc.statRepo.GetById(stat.Id)
+	if err != nil {
+		return err
+	}
+
 	return uc.statRepo.Update(stat)
 }
 
 func (uc statUC) Delete(id int64) error {
+	_, err := uc.statRepo.GetById(id)
+	if err != nil {
+		return err
+	}
+
 	return uc.statRepo.Delete(id)
 }

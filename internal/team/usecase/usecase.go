@@ -36,9 +36,18 @@ func (uc teamUC) Create(team *models.Team) error {
 }
 
 func (uc teamUC) Update(team *models.Team) error {
+	_, err := uc.teamRepo.GetById(team.Id)
+	if err != nil {
+		return err
+	}
+
 	return uc.teamRepo.Update(team)
 }
 
 func (uc teamUC) Delete(id int64) error {
+	_, err := uc.teamRepo.GetById(id)
+	if err != nil {
+		return err
+	}
 	return uc.teamRepo.Delete(id)
 }

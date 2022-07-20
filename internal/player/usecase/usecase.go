@@ -26,9 +26,19 @@ func (uc playerUC) Create(player *models.Player) error {
 }
 
 func (uc playerUC) Update(player *models.Player) error {
+	_, err := uc.playerRepo.GetById(player.Id)
+	if err != nil {
+		return err
+	}
+
 	return uc.playerRepo.Update(player)
 }
 
 func (uc playerUC) Delete(id int64) error {
+	_, err := uc.playerRepo.GetById(id)
+	if err != nil {
+		return err
+	}
+
 	return uc.playerRepo.Delete(id)
 }
