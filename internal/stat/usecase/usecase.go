@@ -17,6 +17,10 @@ func (uc statUC) GetById(id int64) (*models.Stat, error) {
 	return uc.statRepo.GetById(id)
 }
 
+func (uc statUC) GetAvgByPlayerId(id int64) (*models.AvgByPlayerIdStat, error) {
+	return uc.statRepo.GetAvgByPlayerId(id)
+}
+
 func (uc statUC) Create(stat *models.Stat) error {
 	return uc.statRepo.Create(stat)
 }

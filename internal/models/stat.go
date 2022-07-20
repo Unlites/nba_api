@@ -8,3 +8,9 @@ type Stat struct {
 	Rebounds int64 `json:"rebounds" binding:"required" db:"rebounds"`
 	Assists  int64 `json:"assists" binding:"required" db:"assists"`
 }
+
+type AvgByPlayerIdStat struct {
+	AvgPoints   float32 `json:"avg_points" db:"avg_points"`
+	AvgRebounds float32 `json:"avg_rebounds" db:"avg_rebounds"`
+	AvgAssists  float32 `json:"avg_assists" db:"avg_assists"`
+}

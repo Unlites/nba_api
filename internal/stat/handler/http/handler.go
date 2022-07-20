@@ -21,7 +21,9 @@ func (h *statHandler) Create(c *gin.Context) {
 	stat := &models.Stat{}
 
 	if err := h.statUC.Create(stat); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -31,17 +33,41 @@ func (h *statHandler) Create(c *gin.Context) {
 func (h *statHandler) GetById(c *gin.Context) {
 	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	stat, err := h.statUC.GetById(idInput)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	c.JSON(http.StatusOK, stat)
+}
+
+func (h *statHandler) GetAvgByPlayerId(c *gin.Context) {
+	idInput, err := strconv.ParseInt(c.Param("player_id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	avgStat, err := h.statUC.GetAvgByPlayerId(idInput)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, avgStat)
 }
 
 func (h *statHandler) Update(c *gin.Context) {

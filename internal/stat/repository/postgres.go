@@ -32,6 +32,14 @@ func (r *statRepo) GetAllByGameId(gameId int64) ([]*models.Stat, error) {
 	return stats, err
 }
 
+func (r *statRepo) GetAvgByPlayerId(id int64) (*models.AvgByPlayerIdStat, error) {
+	avgStat := &models.AvgByPlayerIdStat{}
+	query := fmt.Sprintf(selectAvgStatByPlayerIdQuery, statsTable)
+	err := r.db.Get(avgStat, query, id)
+
+	return avgStat, err
+}
+
 func (r *statRepo) Create(stat *models.Stat) error {
 	query := fmt.Sprintf(insertStatQuery, statsTable)
 	_, err := r.db.Exec(query, stat.GameId, stat.PlayerId, stat.Points, stat.Rebounds, stat.Assists)

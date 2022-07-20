@@ -10,4 +10,6 @@ func RegisterRoutes(statGroup *gin.RouterGroup, h stat.Handler) {
 	statGroup.GET("/:id", h.GetById)
 	statGroup.PUT("/:id", h.Update)
 	statGroup.DELETE("/:id", h.Delete)
+
+	statGroup.GET("player/avg/:player_id", h.GetAvgByPlayerId)
 }
