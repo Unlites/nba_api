@@ -24,7 +24,6 @@ type Postgres struct {
 	PgHost     string
 	PgPort     string
 	PgUsername string
-	PgPassword string
 	PgDBName   string
 	PgSSLMode  string
 }
