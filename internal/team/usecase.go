@@ -6,7 +6,7 @@ import (
 
 type UseCase interface {
 	GetById(id int64) (*models.Team, error)
-	Create(stat *models.Team) error
+	Create(team *models.Team) error
 	Update(team *models.Team) error
 	Delete(id int64) error
 }
