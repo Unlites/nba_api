@@ -27,7 +27,7 @@ func parseError(errorMessage string) (int, string) {
 	switch {
 	case strings.Contains(errorMessage, "Field validation"):
 		return http.StatusBadRequest, ErrInvalidJSON
-	case strings.Contains(errorMessage, "Not positive id"):
+	case strings.Contains(errorMessage, "not positive id"):
 		return http.StatusBadRequest, ErrNotPositiveId
 	case strings.Contains(errorMessage, "ParseInt"):
 		return http.StatusBadRequest, ErrIdNotInteger

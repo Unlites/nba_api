@@ -2,10 +2,11 @@ package http
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/Unlites/nba_api/internal/models"
 	"github.com/Unlites/nba_api/internal/player"
+	httpErr "github.com/Unlites/nba_api/pkg/http_errors"
+	"github.com/Unlites/nba_api/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,16 +22,12 @@ func (h *playerHandler) Create(c *gin.Context) {
 	player := &models.Player{}
 
 	if err := c.BindJSON(player); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
 	if err := h.playerUC.Create(player); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
@@ -38,19 +35,15 @@ func (h *playerHandler) Create(c *gin.Context) {
 }
 
 func (h *playerHandler) GetById(c *gin.Context) {
-	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	idInput, err := utils.ParseId(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
 	player, err := h.playerUC.GetById(idInput)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
@@ -60,27 +53,21 @@ func (h *playerHandler) GetById(c *gin.Context) {
 func (h *playerHandler) Update(c *gin.Context) {
 	player := &models.Player{}
 
-	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	idInput, err := utils.ParseId(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
 	player.Id = idInput
 
 	if err := c.BindJSON(player); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
 	if err := h.playerUC.Update(player); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
@@ -88,18 +75,14 @@ func (h *playerHandler) Update(c *gin.Context) {
 }
 
 func (h *playerHandler) Delete(c *gin.Context) {
-	idInput, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	idInput, err := utils.ParseId(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
 	if err := h.playerUC.Delete(idInput); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 
