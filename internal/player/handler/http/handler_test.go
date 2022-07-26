@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/Unlites/nba_api/internal/models"
-	mock_team "github.com/Unlites/nba_api/internal/team/mocks"
+	mock_player "github.com/Unlites/nba_api/internal/player/mocks"
 	httpErr "github.com/Unlites/nba_api/pkg/http_errors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -20,13 +20,13 @@ import (
 type testCase struct {
 	name                 string
 	queryParamId         int64
-	queryBody            *models.Team
-	mockBehavior         func(s *mock_team.MockUseCase, queryParamId int64, input *models.Team)
+	queryBody            *models.Player
+	mockBehavior         func(s *mock_player.MockUseCase, queryParamId int64, input *models.Player)
 	expectedStatusCode   int
 	expectedResponseBody string
 }
 
-type teamHandlerTestParams struct {
+type playerHandlerTestParams struct {
 	t            *testing.T
 	testCase     testCase
 	queryMethod  string
@@ -34,17 +34,17 @@ type teamHandlerTestParams struct {
 	isBodyExists bool
 }
 
-func teamHandlerTestRun(testParams *teamHandlerTestParams) {
+func playerHandlerTestRun(testParams *playerHandlerTestParams) {
 	ctrl := gomock.NewController(testParams.t)
 	defer ctrl.Finish()
 
-	uc := mock_team.NewMockUseCase(ctrl)
+	uc := mock_player.NewMockUseCase(ctrl)
 	testParams.testCase.mockBehavior(uc, testParams.testCase.queryParamId, testParams.testCase.queryBody)
 
-	handler := NewTeamHandler(uc)
+	handler := NewPlayerHandler(uc)
 
 	router := gin.Default()
-	group := router.Group("/api/v1/team")
+	group := router.Group("/api/v1/player")
 
 	RegisterRoutes(group, handler)
 
@@ -71,27 +71,27 @@ func TestHandler_GetById(t *testing.T) {
 		{
 			name:         "Success",
 			queryParamId: 1,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
-				s.EXPECT().GetById(queryParamId).Return(&models.Team{
-					Id:      1,
-					Name:    "Team Name",
-					Players: nil,
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
+				s.EXPECT().GetById(queryParamId).Return(&models.Player{
+					Id:     1,
+					Name:   "Player Name",
+					TeamId: 1,
 				}, nil)
 			},
 			expectedStatusCode:   200,
-			expectedResponseBody: `{"id":1,"name":"Team Name","players":null}`,
+			expectedResponseBody: `{"id":1,"name":"Player Name","team_id":1}`,
 		},
 		{
 			name:                 "Not positive id",
 			queryParamId:         0,
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrNotPositiveId,
 		},
 		{
 			name:         "Not found",
 			queryParamId: 2,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().GetById(queryParamId).Return(nil, errors.New("sql: no rows in result set"))
 			},
 			expectedStatusCode:   404,
@@ -100,7 +100,7 @@ func TestHandler_GetById(t *testing.T) {
 		{
 			name:         "Internal error",
 			queryParamId: 1,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().GetById(queryParamId).Return(nil, errors.New("some error"))
 			},
 			expectedStatusCode:   500,
@@ -109,11 +109,11 @@ func TestHandler_GetById(t *testing.T) {
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			teamHandlerTestRun(&teamHandlerTestParams{
+			playerHandlerTestRun(&playerHandlerTestParams{
 				t:            t,
 				testCase:     testCase,
 				queryMethod:  "GET",
-				queryURL:     fmt.Sprintf("/api/v1/team/%v", testCase.queryParamId),
+				queryURL:     fmt.Sprintf("/api/v1/player/%v", testCase.queryParamId),
 				isBodyExists: false,
 			})
 		})
@@ -124,37 +124,42 @@ func TestHandler_Create(t *testing.T) {
 	testTable := []testCase{
 		{
 			name: "Success",
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Create(queryBody).Return(nil)
 			},
 			expectedStatusCode:   200,
 			expectedResponseBody: "",
 		},
 		{
-			name:                 "Missed param",
-			queryBody:            &models.Team{},
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			name: "Missed param",
+			queryBody: &models.Player{
+				Name: "Player Name",
+			},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrInvalidJSON,
 		},
 		{
 			name: "Empty param",
-			queryBody: &models.Team{
-				Name: "",
+			queryBody: &models.Player{
+				Name:   "",
+				TeamId: 1,
 			},
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrInvalidJSON,
 		},
 		{
 			name: "Internal error",
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Create(queryBody).Return(errors.New("some error"))
 			},
 			expectedStatusCode:   500,
@@ -163,11 +168,11 @@ func TestHandler_Create(t *testing.T) {
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			teamHandlerTestRun(&teamHandlerTestParams{
+			playerHandlerTestRun(&playerHandlerTestParams{
 				t:            t,
 				testCase:     testCase,
 				queryMethod:  "POST",
-				queryURL:     "/api/v1/team/",
+				queryURL:     "/api/v1/player/",
 				isBodyExists: true,
 			})
 		})
@@ -179,10 +184,11 @@ func TestHandler_Update(t *testing.T) {
 		{
 			name:         "Success",
 			queryParamId: 1,
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Update(queryBody).Return(nil)
 			},
 			expectedStatusCode:   200,
@@ -191,50 +197,56 @@ func TestHandler_Update(t *testing.T) {
 		{
 			name:         "Not positive id",
 			queryParamId: 0,
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrNotPositiveId,
 		},
 		{
 			name:         "Not found",
 			queryParamId: 1,
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Update(queryBody).Return(errors.New("sql: no rows in result set"))
 			},
 			expectedStatusCode:   404,
 			expectedResponseBody: httpErr.ErrNotFound,
 		},
 		{
-			name:                 "Missed param",
-			queryParamId:         1,
-			queryBody:            &models.Team{},
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			name:         "Missed param",
+			queryParamId: 1,
+			queryBody: &models.Player{
+				Name: "Player Name",
+			},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrInvalidJSON,
 		},
 		{
 			name:         "Empty param",
 			queryParamId: 1,
-			queryBody: &models.Team{
-				Name: "",
+			queryBody: &models.Player{
+				Name:   "",
+				TeamId: 1,
 			},
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrInvalidJSON,
 		},
 		{
 			name:         "Internal error",
 			queryParamId: 1,
-			queryBody: &models.Team{
-				Name: "Team Name",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: 1,
 			},
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Update(queryBody).Return(errors.New("some error"))
 			},
 			expectedStatusCode:   500,
@@ -243,11 +255,11 @@ func TestHandler_Update(t *testing.T) {
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			teamHandlerTestRun(&teamHandlerTestParams{
+			playerHandlerTestRun(&playerHandlerTestParams{
 				t:            t,
 				testCase:     testCase,
 				queryMethod:  "PUT",
-				queryURL:     fmt.Sprintf("/api/v1/team/%v", testCase.queryParamId),
+				queryURL:     fmt.Sprintf("/api/v1/player/%v", testCase.queryParamId),
 				isBodyExists: true,
 			})
 		})
@@ -259,7 +271,7 @@ func TestHandler_Delete(t *testing.T) {
 		{
 			name:         "Success",
 			queryParamId: 1,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Delete(queryParamId).Return(nil)
 			},
 			expectedStatusCode:   200,
@@ -268,14 +280,14 @@ func TestHandler_Delete(t *testing.T) {
 		{
 			name:                 "Not positive id",
 			queryParamId:         0,
-			mockBehavior:         func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: httpErr.ErrNotPositiveId,
 		},
 		{
 			name:         "Not found",
 			queryParamId: 2,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Delete(queryParamId).Return(errors.New("sql: no rows in result set"))
 			},
 			expectedStatusCode:   404,
@@ -284,7 +296,7 @@ func TestHandler_Delete(t *testing.T) {
 		{
 			name:         "Internal error",
 			queryParamId: 1,
-			mockBehavior: func(s *mock_team.MockUseCase, queryParamId int64, queryBody *models.Team) {
+			mockBehavior: func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {
 				s.EXPECT().Delete(queryParamId).Return(errors.New("some error"))
 			},
 			expectedStatusCode:   500,
@@ -293,11 +305,11 @@ func TestHandler_Delete(t *testing.T) {
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			teamHandlerTestRun(&teamHandlerTestParams{
+			playerHandlerTestRun(&playerHandlerTestParams{
 				t:            t,
 				testCase:     testCase,
 				queryMethod:  "DELETE",
-				queryURL:     fmt.Sprintf("/api/v1/team/%v", testCase.queryParamId),
+				queryURL:     fmt.Sprintf("/api/v1/player/%v", testCase.queryParamId),
 				isBodyExists: false,
 			})
 		})
