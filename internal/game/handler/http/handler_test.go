@@ -279,6 +279,58 @@ func TestHandler_Create(t *testing.T) {
 			expectedStatusCode:   500,
 			expectedResponseBody: httpErr.ErrInternal,
 		},
+		{
+			name: "Invalid won team id",
+			queryBody: &models.Game{
+				HomeTeamId:    1,
+				VisitorTeamId: 2,
+				Score:         "120:100",
+				WonTeamId:     3,
+				Stats: []*models.Stat{
+					{
+						PlayerId: 1,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
+					},
+					{
+						PlayerId: 2,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
+					},
+				},
+			},
+			mockBehavior:         func(s *mock_game.MockUseCase, queryParamId int64, queryBody *models.Game) {},
+			expectedStatusCode:   400,
+			expectedResponseBody: httpErr.ErrInvalidJSON,
+		},
+		{
+			name: "Not positive param",
+			queryBody: &models.Game{
+				HomeTeamId:    1,
+				VisitorTeamId: 2,
+				Score:         "120:100",
+				WonTeamId:     3,
+				Stats: []*models.Stat{
+					{
+						PlayerId: 1,
+						Points:   "-30",
+						Rebounds: "8",
+						Assists:  "6",
+					},
+					{
+						PlayerId: 2,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
+					},
+				},
+			},
+			mockBehavior:         func(s *mock_game.MockUseCase, queryParamId int64, queryBody *models.Game) {},
+			expectedStatusCode:   400,
+			expectedResponseBody: httpErr.ErrInvalidJSON,
+		},
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {

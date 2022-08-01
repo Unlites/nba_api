@@ -165,6 +165,16 @@ func TestHandler_Create(t *testing.T) {
 			expectedStatusCode:   500,
 			expectedResponseBody: httpErr.ErrInternal,
 		},
+		{
+			name: "Not positive param",
+			queryBody: &models.Player{
+				Name:   "Player Name",
+				TeamId: -1,
+			},
+			mockBehavior:         func(s *mock_player.MockUseCase, queryParamId int64, queryBody *models.Player) {},
+			expectedStatusCode:   400,
+			expectedResponseBody: httpErr.ErrInvalidJSON,
+		},
 	}
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
