@@ -1,12 +1,12 @@
 package models
 
 type Stat struct {
-	Id       int64 `json:"id" db:"id"`
-	GameId   int64 `json:"game_id" db:"game_id"`
-	PlayerId int64 `json:"player_id" binding:"required" db:"player_id"`
-	Points   int64 `json:"points" binding:"required" db:"points"`
-	Rebounds int64 `json:"rebounds" binding:"required" db:"rebounds"`
-	Assists  int64 `json:"assists" binding:"required" db:"assists"`
+	Id       int64  `json:"id" db:"id"`
+	GameId   int64  `json:"game_id" binding:"required,gt=0" db:"game_id"`
+	PlayerId int64  `json:"player_id" binding:"required,gt=0" db:"player_id"`
+	Points   string `json:"points" binding:"required,number,gte=0" db:"points"`
+	Rebounds string `json:"rebounds" binding:"required,number,gte=0" db:"rebounds"`
+	Assists  string `json:"assists" binding:"required,number,gte=0" db:"assists"`
 }
 
 type AvgByPlayerIdStat struct {

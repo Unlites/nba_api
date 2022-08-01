@@ -21,6 +21,11 @@ func NewStatHandler(statUC stat.UseCase) stat.Handler {
 func (h *statHandler) Create(c *gin.Context) {
 	stat := &models.Stat{}
 
+	if err := c.BindJSON(stat); err != nil {
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
+		return
+	}
+
 	if err := h.statUC.Create(stat); err != nil {
 		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
@@ -93,9 +98,7 @@ func (h *statHandler) Delete(c *gin.Context) {
 	}
 
 	if err := h.statUC.Delete(idInput); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.AbortWithStatusJSON(httpErr.NewErrorResponse(err.Error()))
 		return
 	}
 

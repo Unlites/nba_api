@@ -83,17 +83,17 @@ func TestHandler_GetById(t *testing.T) {
 							Id:       1,
 							GameId:   1,
 							PlayerId: 1,
-							Points:   30,
-							Rebounds: 8,
-							Assists:  6,
+							Points:   "30",
+							Rebounds: "8",
+							Assists:  "6",
 						},
 						{
 							Id:       2,
 							GameId:   1,
 							PlayerId: 2,
-							Points:   25,
-							Rebounds: 5,
-							Assists:  3,
+							Points:   "25",
+							Rebounds: "5",
+							Assists:  "3",
 						},
 					},
 				}, nil)
@@ -110,17 +110,17 @@ func TestHandler_GetById(t *testing.T) {
 				`"id":1,` +
 				`"game_id":1,` +
 				`"player_id":1,` +
-				`"points":30,` +
-				`"rebounds":8,` +
-				`"assists":6` +
+				`"points":"30",` +
+				`"rebounds":"8",` +
+				`"assists":"6"` +
 				`},` +
 				`{` +
 				`"id":2,` +
 				`"game_id":1,` +
 				`"player_id":2,` +
-				`"points":25,` +
-				`"rebounds":5,` +
-				`"assists":3` +
+				`"points":"25",` +
+				`"rebounds":"5",` +
+				`"assists":"3"` +
 				`}` +
 				`]` +
 				`}`,
@@ -175,16 +175,18 @@ func TestHandler_Create(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -203,15 +205,15 @@ func TestHandler_Create(t *testing.T) {
 				Stats: []*models.Stat{
 					{
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -228,16 +230,18 @@ func TestHandler_Create(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -254,16 +258,18 @@ func TestHandler_Create(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -299,16 +305,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -328,16 +336,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -355,16 +365,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -383,16 +395,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -410,16 +424,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
@@ -437,16 +453,18 @@ func TestHandler_Update(t *testing.T) {
 				WonTeamId:     1,
 				Stats: []*models.Stat{
 					{
+						GameId:   1,
 						PlayerId: 1,
-						Points:   30,
-						Rebounds: 8,
-						Assists:  6,
+						Points:   "30",
+						Rebounds: "8",
+						Assists:  "6",
 					},
 					{
+						GameId:   1,
 						PlayerId: 2,
-						Points:   25,
-						Rebounds: 5,
-						Assists:  3,
+						Points:   "25",
+						Rebounds: "5",
+						Assists:  "3",
 					},
 				},
 			},
