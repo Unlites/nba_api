@@ -21,7 +21,7 @@ type testCase struct {
 	name                 string
 	queryParamId         int64
 	queryBody            *models.Stat
-	mockBehavior         func(s *mock_stat.MockUseCase, queryParamId int64, input *models.Stat)
+	mockBehavior         func(s *mock_stat.MockUseCase, queryParamId int64, queryBody *models.Stat)
 	expectedStatusCode   int
 	expectedResponseBody string
 }
